@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Architecture Spine Validation</title>
+  <style>
+    :root { color-scheme: light; --ink: #18242b; --muted: #52636a; --paper: #f3f5f3; --panel: #fff; --line: #d8e0dc; --red: #a52e27; --amber: #8a5a00; --green: #176947; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 Georgia, "Times New Roman", serif; }
+    main { max-width: 960px; margin: 0 auto; padding: 48px 24px 72px; }
+    header { border-bottom: 2px solid var(--ink); padding-bottom: 24px; margin-bottom: 28px; }
+    .eyebrow { color: var(--muted); font: 700 12px/1.3 "Segoe UI", sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+    h1 { font-size: clamp(32px, 5vw, 48px); line-height: 1.08; margin: 12px 0; }
+    h2 { font-size: 25px; margin: 30px 0 12px; }
+    h3 { margin: 4px 0 8px; font-size: 20px; }
+    p { margin: 8px 0 12px; }
+    .verdict { background: #e5eee8; border-left: 5px solid var(--green); padding: 16px 20px; margin: 24px 0; }
+    .finding { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 18px 20px; margin: 12px 0; }
+    .severity { font: 700 11px/1.3 "Segoe UI", sans-serif; letter-spacing: .07em; text-transform: uppercase; }
+    .high { color: var(--red); } .medium { color: var(--amber); } .low { color: var(--muted); }
+    .section { color: var(--muted); font-size: 14px; }
+    table { width: 100%; border-collapse: collapse; background: var(--panel); font-size: 15px; }
+    th, td { text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); padding: 10px 12px; }
+    th { font: 700 12px "Segoe UI", sans-serif; text-transform: uppercase; color: var(--muted); }
+    code { font: 0.9em Consolas, monospace; background: #edf1ee; padding: 1px 4px; }
+    a { color: #125f78; }
+    footer { margin-top: 26px; color: var(--muted); font-size: 14px; }
+    @media (max-width: 600px) { main { padding: 28px 16px 48px; } th, td { padding: 8px 6px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="eyebrow">BMad Architecture · Validate</div>
+      <h1>Architecture Spine Review</h1>
+      <p>Target: <code>ARCHITECTURE-SPINE.md</code> · Scope: initiative spine for CAP-1 through CAP-6</p>
+    </header>
+    <section class="verdict">
+      <strong>Verdict: Needs revision before handoff.</strong>
+      <div>The spine covers the core architecture and its deterministic lint passes, but two decisions leave behavior/security open to incompatible implementations. The dependency diagram also conflicts with its stated inward-dependency rule.</div>
+    </section>
+    <h2>Findings</h2>
+    <article class="finding">
+      <div class="severity high">High · Authorization</div>
+      <h3>RPC security mode is not bound</h3>
+      <p class="section">Invariants &amp; Rules · AD-2 and AD-6</p>
+      <p>AD-2 puts combined writes in a server-only transaction/RPC and AD-6 makes RLS authoritative, but does not bind the function execution mode or equivalent privilege checks. A definer-security function can bypass table RLS, allowing mutation paths to enforce different ownership rules.</p>
+      <p><strong>Clear fix:</strong> Require invoker security with verified claims/RLS, or specify and test explicit ownership checks, restricted execute grants, and hardened definer configuration.</p>
+    </article>
+    <article class="finding">
+      <div class="severity high">High · Data mutation</div>
+      <h3>Vibes cannot persist for an unadopted book</h3>
+      <p class="section">Invariants &amp; Rules · AD-2; Capability → Architecture Map · CAP-4</p>
+      <p>AD-2 permits a local book upsert only on shelving or reviewing. CAP-4 writes <code>BookVibe</code> rows that reference a book. A vibe-only action has no permitted way to create that book row.</p>
+      <p><strong>Clear fix:</strong> Make the first vibe mutation an atomic adoption/upsert trigger, or explicitly constrain CAP-4 to books already adopted. The latter narrows the current product contract.</p>
+    </article>
+    <article class="finding">
+      <div class="severity medium">Medium · Dependency boundaries</div>
+      <h3>Diagram and prose disagree about dependency direction</h3>
+      <p class="section">Design Paradigm</p>
+      <p>The prose says dependencies point inward, while the diagram draws application code toward infrastructure adapters (<code>APP → DB</code>, <code>APP → BOOKS</code>). Those arrows make sense as runtime calls, but are not labeled as such and contradict compile-time dependency direction.</p>
+      <p><strong>Clear fix:</strong> Label the existing diagram as runtime flow and add a compile-time dependency graph showing adapters implement ports owned by the inward layers.</p>
+    </article>
+    <article class="finding">
+      <div class="severity low">Low · Environment parity</div>
+      <h3>PostgreSQL major version parity is unstated</h3>
+      <p class="section">Deferred · PostgreSQL major version</p>
+      <p>Separate development and production projects may choose different supported majors unless parity is explicit.</p>
+      <p><strong>Clear fix:</strong> Defer the exact selection until provisioning, but require the same supported major in every environment.</p>
+    </article>
+    <h2>Checklist</h2>
+    <table>
+      <thead><tr><th>Dimension</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>Paradigm</td><td>Decided; dependency-diagram semantics conflict with the prose.</td></tr>
+        <tr><td>Data ownership</td><td>Decided; CAP-4 book adoption needs reconciliation.</td></tr>
+        <tr><td>Mutation</td><td>Mostly decided: transaction, shelf status, editable review, derived average.</td></tr>
+        <tr><td>Security</td><td>Boundary decided; RPC execution and privileges remain underspecified.</td></tr>
+        <tr><td>Deployment/operations</td><td>Hosts and environments named; operational readiness work is gated before real users.</td></tr>
+        <tr><td>Provider constraints</td><td>Google Books constraints and non-commercial plan bounds are stated and corroborated against current official pages.</td></tr>
+        <tr><td>Deferred divergence</td><td>Mostly bounded; add database-major parity across environments.</td></tr>
+        <tr><td>Source coverage</td><td>CAP-1 through CAP-6 mapped; CAP-4 has the adoption gap noted above.</td></tr>
+      </tbody>
+    </table>
+    <footer>
+      Deterministic lint: passed with 0 findings. Sources checked:
+      <a href="https://nextjs.org/docs/app/getting-started/installation">Next.js</a>,
+      <a href="https://supabase.com/pricing">Supabase</a>,
+      <a href="https://vercel.com/pricing">Vercel</a>, and
+      <a href="https://developers.google.com/books/terms">Google Books terms</a> /
+      <a href="https://developers.google.com/books/branding">branding</a>.
+    </footer>
+  </main>
+</body>
+</html>
