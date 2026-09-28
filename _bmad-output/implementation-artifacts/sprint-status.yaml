@@ -30,11 +30,16 @@
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 09-27-2026 00:00
 last_updated: 09-27-2026 00:00
-project: Projeto teste
+project: Letterboxd de Livros
 project_key: NOKEY
 tracking_system: file-system
 story_location: _bmad-output/implementation-artifacts
 development_status:
+  epic-0: backlog
+  0-1-inicializar-o-projeto-a-partir-do-starter-next-js-sp-1: backlog
+  0-2-configurar-ambientes-supabase-separados-sp-2: backlog
+  epic-0-retrospective: optional
+
   epic-1: backlog
   1-1-criar-conta-e-perfil: backlog
   1-2-entrar-com-e-mail-e-senha: backlog

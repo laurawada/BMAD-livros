@@ -11,7 +11,7 @@ inputDocuments:
   - _bmad-output/planning-artifacts/architecture/architecture-Projeto teste-2026-09-27/ARCHITECTURE-SPINE.md
 ---
 
-# Projeto teste - Epic Breakdown
+# Letterboxd de Livros - Epic Breakdown
 
 ## Overview
 
@@ -120,7 +120,7 @@ Uma pessoa consegue consultar perfis e resenhas públicas, médias e leituras co
 
 ## Pré-requisitos compartilhados (fora dos quatro épicos)
 
-### Story SP-1: Inicializar o projeto a partir do starter Next.js
+### Story 0.1: Inicializar o projeto a partir do starter Next.js (SP-1)
 
 Como equipe de desenvolvimento,
 quero iniciar o repositório a partir do starter oficial Next.js 16.3.6,
@@ -145,7 +145,7 @@ para que os quatro épicos partam da mesma estrutura e configuração executáve
 **When** os comandos documentados de desenvolvimento e build são executados
 **Then** a aplicação inicia e compila sem erro.
 
-### Story SP-2: Configurar ambientes Supabase separados
+### Story 0.2: Configurar ambientes Supabase separados (SP-2)
 
 Como equipe de desenvolvimento,
 quero configurar projetos Supabase distintos para preview/desenvolvimento e produção,
