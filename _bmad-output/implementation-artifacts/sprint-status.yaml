@@ -1,0 +1,57 @@
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created, ready for development
+#   - in-progress: Developer actively working on implementation
+#   - review: Implementation complete, ready for review
+#   - done: Story completed
+
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+
+# Action Item Status:
+#   - open: Committed during a retrospective, not yet addressed
+#   - in-progress: Actively being worked on
+#   - done: Completed
+
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when its first story starts (via build's sprint sync)
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates the next story after the previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+# - Retrospective appends its action items to action_items; the status view surfaces open ones
+generated: 09-27-2026 00:00
+last_updated: 09-27-2026 00:00
+project: Projeto teste
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+development_status:
+  epic-1: backlog
+  1-1-criar-conta-e-perfil: backlog
+  1-2-entrar-com-e-mail-e-senha: backlog
+  epic-1-retrospective: optional
+
+  epic-2: backlog
+  2-1-pesquisar-livros-no-google-books: backlog
+  2-2-consultar-a-ficha-de-um-livro: backlog
+  2-3-explorar-a-página-inicial: backlog
+  epic-2-retrospective: optional
+
+  epic-3: backlog
+  3-1-adicionar-livros-e-organizar-a-estante: backlog
+  3-2-avaliar-e-manter-minha-avaliação: backlog
+  3-3-associar-vibes-a-um-livro: backlog
+  epic-3-retrospective: optional
+
+  epic-4: backlog
+  4-1-consultar-perfil-e-atividade-pública: backlog
+  epic-4-retrospective: optional

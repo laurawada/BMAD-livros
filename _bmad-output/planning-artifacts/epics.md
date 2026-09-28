@@ -3,6 +3,7 @@ stepsCompleted:
   - step-01-validate-prerequisites
   - step-02-design-epics
   - step-03-create-stories
+  - step-04-final-validation
 inputDocuments:
   - _bmad-output/specs/spec-letterboxd-de-livros/SPEC.md
   - _bmad-output/specs/spec-letterboxd-de-livros/product-surface.md
@@ -67,7 +68,7 @@ NFR8: Manter o fluxo encontrar-avaliar-estante com poucos passos e interface sim
 
 ### UX Design Requirements
 
-Nenhum contrato UX formal (`DESIGN.md`/`EXPERIENCE.md`) foi encontrado. Os requisitos existentes de direção visual e interação estão capturados em FR1, FR2, FR6 e NFR8.
+Nenhum contrato UX formal (`DESIGN.md`/`EXPERIENCE.md`) foi encontrado. A direção visual do SPEC é orientação geral e não bloqueante para stories com frontend; nesta rodada, não gera critérios de aceite verificáveis específicos.
 
 ### FR Coverage Map
 
@@ -115,6 +116,63 @@ Uma pessoa consegue consultar perfis e resenhas públicas, médias e leituras co
 - **A seguir:** Epic 3 integra identidade e catálogo; em paralelo, Epic 4 pode avançar na UI de perfil usando interfaces/fixtures aprovadas, mas não fechar integração antes do contrato de dados públicos.
 - **Pré-requisitos compartilhados antes da divisão:** schema e migrations de User, Book, Review, Shelf e BookVibe; `externalId` único e regra de snapshot; unicidades e validações de rating/status/vibe; semântica de remoção e exclusão de Review; RPC transacional e fronteira server-only; policies RLS e projeção pública Lido; tipos/ports e ownership das migrations.
 - Ownership é por épico. Stories dentro de um mesmo épico são sequenciais ou coordenadas pelo owner, não unidades de paralelismo entre pessoas.
+- As stories compartilhadas SP-1 e SP-2 abaixo devem ser concluídas antes do início dos Epics 1 e 2; podem ser executadas em paralelo por owners distintos.
+
+## Pré-requisitos compartilhados (fora dos quatro épicos)
+
+### Story SP-1: Inicializar o projeto a partir do starter Next.js
+
+Como equipe de desenvolvimento,
+quero iniciar o repositório a partir do starter oficial Next.js 16.3.6,
+para que os quatro épicos partam da mesma estrutura e configuração executável.
+
+**FRs covered:** Nenhum diretamente; pré-requisito técnico para FR1–FR7.
+**NFRs covered:** NFR1; stack e estrutura do Architecture Spine.
+**Owner:** Pessoa 1.
+**Dependency:** Concluir antes dos Epics 1 e 2.
+
+**Acceptance Criteria:**
+
+**Given** o repositório vazio para a aplicação
+**When** a inicialização do starter é concluída
+**Then** o projeto usa Next.js App Router 16.3.6, TypeScript e Node.js mínimo 20.9, com dependências travadas no lockfile.
+
+**Given** o projeto inicializado
+**When** a estrutura da aplicação é inspecionada
+**Then** existem os diretórios-base `src/app`, `src/server`, `src/domain` e `src/infrastructure`, sem implementar funcionalidades de produto.
+
+**Given** dependências instaladas
+**When** os comandos documentados de desenvolvimento e build são executados
+**Then** a aplicação inicia e compila sem erro.
+
+### Story SP-2: Configurar ambientes Supabase separados
+
+Como equipe de desenvolvimento,
+quero configurar projetos Supabase distintos para preview/desenvolvimento e produção,
+para evitar mistura de usuários e dados entre ambientes.
+
+**FRs covered:** Nenhum diretamente; pré-requisito técnico para FR1–FR7.
+**NFRs covered:** NFR2, NFR7; ambientes e gestão de credenciais do Architecture Spine.
+**Owner:** Pessoa 2.
+**Dependency:** Concluir antes dos Epics 1 e 2; pode ocorrer em paralelo com SP-1.
+
+**Acceptance Criteria:**
+
+**Given** os ambientes de desenvolvimento/preview e produção
+**When** suas configurações são provisionadas
+**Then** cada ambiente aponta para um projeto Supabase distinto, com Auth e banco independentes.
+
+**Given** variáveis de ambiente locais ou de deploy
+**When** são configuradas para um ambiente
+**Then** URL e chave pública correspondem apenas ao projeto daquele ambiente; credenciais de produção não são usadas em preview/desenvolvimento, nem vice-versa.
+
+**Given** o repositório e o bundle de navegador
+**When** configurações são inspecionadas
+**Then** arquivos de segredo não são versionados, exemplos contêm apenas placeholders e a service-role key não é exposta ao navegador.
+
+**Given** uma aplicação inicializada em cada ambiente
+**When** a conexão Supabase é verificada
+**Then** cada aplicação autentica e consulta somente seu próprio projeto.
 
 ## Epic 1: Conta e acesso seguro
 
@@ -125,6 +183,8 @@ Uma pessoa consegue criar uma conta com nome, e-mail e senha, autenticar-se e ob
 Como visitante,
 quero criar uma conta com meu nome, e-mail e senha,
 para acessar as funções pessoais do produto.
+
+**FRs covered:** FR7.
 
 **Acceptance Criteria:**
 
@@ -145,6 +205,8 @@ para acessar as funções pessoais do produto.
 Como pessoa cadastrada,
 quero entrar com meu e-mail e senha,
 para acessar minhas funções pessoais.
+
+**FRs covered:** FR7.
 
 **Acceptance Criteria:**
 
@@ -169,6 +231,8 @@ Uma pessoa consegue descobrir livros pela home e busca, abrir fichas de livros e
 Como leitor,
 quero pesquisar livros por título ou autor,
 para encontrar o livro que desejo consultar.
+
+**FRs covered:** FR1.
 
 **Acceptance Criteria:**
 
@@ -197,6 +261,8 @@ para encontrar o livro que desejo consultar.
 Como leitor,
 quero abrir a ficha de um livro,
 para consultar seus dados e avaliações da comunidade.
+
+**FRs covered:** FR2.
 
 **Acceptance Criteria:**
 
@@ -230,6 +296,8 @@ Como leitor,
 quero ver livros avaliados recentemente e resenhas recentes na página inicial,
 para encontrar leituras e opiniões da comunidade.
 
+**FRs covered:** FR1.
+
 **Acceptance Criteria:**
 
 **Given** existem avaliações e resenhas
@@ -258,6 +326,8 @@ Como leitor autenticado,
 quero adicionar livros à minha estante e organizá-los por status,
 para acompanhar minhas leituras.
 
+**FRs covered:** FR4.
+
 **Acceptance Criteria:**
 
 **Given** um livro ainda não adotado localmente
@@ -285,6 +355,8 @@ para acompanhar minhas leituras.
 Como leitor autenticado,
 quero avaliar um livro e poder editar ou excluir minha avaliação,
 para registrar minha opinião sem duplicar o status da estante.
+
+**FRs covered:** FR3.
 
 **Acceptance Criteria:**
 
@@ -322,6 +394,8 @@ Como leitor autenticado,
 quero associar vibes a um livro,
 para expressar como o percebi e consultar essas tags na ficha.
 
+**FRs covered:** FR5.
+
 **Acceptance Criteria:**
 
 **Given** uma vibe não vazia para um livro
@@ -353,6 +427,8 @@ Uma pessoa consegue consultar perfis e resenhas públicas, médias e leituras co
 Como leitor,
 quero consultar o perfil, as resenhas e as leituras concluídas de uma pessoa,
 para conhecer sua atividade de leitura sem acessar sua estante privada.
+
+**FRs covered:** FR6.
 
 **Acceptance Criteria:**
 
