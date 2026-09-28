@@ -1,4 +1,4 @@
-# Letterboxd de Livros
+# Avaliação de Livros
 
 Aplicação Next.js com App Router e TypeScript. Requer Node.js 20.9 ou superior.
 
