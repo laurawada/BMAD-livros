@@ -9,7 +9,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint src scripts",
+    "verify:supabase": "node --env-file=.env.local scripts/verify-supabase-env.mjs",
+    "test:supabase-env": "node --test scripts/verify-supabase-env.test.mjs"
   },
   "dependencies": {
     "next": "16.3.6",
