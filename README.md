@@ -45,7 +45,7 @@ Configure as mesmas duas variáveis conforme o destino do deploy:
 
 Em cada ambiente Vercel, cadastre `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` usando somente os valores do projeto correspondente. Faça novo deploy após alterar variáveis, pois valores `NEXT_PUBLIC_` são incorporados ao bundle durante o build. Confirme no painel que a URL de produção e a de desenvolvimento são distintas.
 
-Para verificar, sem modificar dados, que Auth e Data API respondem para o projeto configurado localmente:
+Para verificar, sem modificar dados, que Auth e Data API respondem para o projeto configurado localmente, o smoke check consulta Auth health e `profiles?select=id&limit=1`. A resposta `404 PGRST205` é aceita quando a tabela ainda não foi criada; outras respostas de erro falham:
 
 ```bash
 npm run verify:supabase

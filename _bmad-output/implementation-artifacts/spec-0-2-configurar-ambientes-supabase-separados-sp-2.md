@@ -2,7 +2,7 @@
 title: 'SP-2: Configurar ambientes Supabase separados'
 type: 'chore'
 created: '2026-09-27'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 baseline_commit: '847fc9d575df7bcfe51b2dd2100a4449c89bebe0'
 review_loop_iteration: 0
@@ -57,15 +57,15 @@ context:
 
 ## Implementation Notes
 
-O `.env.local` existente foi preservado sem leitura de conteúdo ou edição. A inspeção de nomes confirmou pares primário e `_2`; somente os dois hosts foram comparados (origens distintas), sem imprimir valores. `.gitignore` agora ignora `.env*` com exceção de `.env.example`; o exemplo contém apenas placeholders. README documenta o mapeamento local/Vercel e os comandos de smoke test. O script faz somente GET para Auth health e raiz da Data API e não imprime URL, chave nem corpo de resposta; quatro testes automatizados cobrem sucesso, variável ausente, URL inválida e endpoint com erro.
+O `.env.local` existente foi preservado sem leitura de conteúdo ou edição. A inspeção de nomes confirmou pares primário e `_2`; somente os dois hosts foram comparados (origens distintas), sem imprimir valores. `.gitignore` ignora `.env*` com exceção de `.env.example`; o exemplo contém apenas placeholders. README documenta o mapeamento local/Vercel e os comandos de smoke test. O script faz somente GET para Auth health e `profiles?select=id&limit=1`, aceita `404 PGRST205` para tabela ainda inexistente, e não imprime URL, chave nem corpo de resposta. Rejeita chaves secret antes de qualquer requisição; `.env.local` usa valores publicáveis.
 
-Validação executada: `npm run lint` e `npm run test:supabase-env` passaram; busca de marcadores privilegiados em `.next/static` não encontrou ocorrências. `npm run verify:supabase` retornou `Supabase Data API returned HTTP 401` para ambos os pares; a chave e o corpo não foram registrados. É necessário confirmar no painel que cada publishable key pertence ao URL correspondente e que a Data API está habilitada. Duas tentativas de `npm run build` falharam com `EPERM unlink` em artefato sob `.next/static`, mas a tentativa final compilou TypeScript e todas as páginas com sucesso; o erro foi transitório.
+Validação final: `npm run lint`, `npm run test:supabase-env` (11 testes), `npm run build`, `npm run verify:supabase` para o ambiente padrão e uma chamada isolada ao segundo par passaram. Nenhum valor secreto foi impresso. `git check-ignore` confirma `.env.local` ignorado e `.env.example` não ignorado. O mapeamento de variáveis no painel Vercel ainda precisa de confirmação manual.
 
 Não foi possível inspecionar as variáveis dos ambientes Vercel; o README descreve o mapeamento esperado, que precisa ser confirmado no painel.
 
-Após a revisão, o checker passou a exigir HTTPS e remover espaços externos da chave; a suíte passou com oito casos, incluindo falha específica da Data API e indisponibilidade de rede. As pendências de conectividade e painel Vercel estão registradas em `deferred-work.md`.
+Após a revisão, o checker passou a exigir HTTPS, remover espaços externos da chave, usar uma consulta limitada à tabela `profiles` e aceitar somente `200` ou `404 PGRST205` da Data API. Chaves secret são recusadas antes da rede.
 
-A validação final `npm run build` passou; a pendência temporária de EPERM foi removida do ledger. Permanecem diferidas somente a resposta 401 das Data APIs e a conferência manual das variáveis no painel Vercel.
+O checker original da Data API consultava a raiz `/rest/v1/`, que não é o endpoint de smoke check compatível com a chave pública neste setup e retornava `401`. A consulta a `profiles` corrigiu o problema e passou em ambos os projetos.
 
 ## Review Triage Log
 
@@ -74,7 +74,7 @@ A validação final `npm run build` passou; a pendência temporária de EPERM fo
 - low — Espaços externos na chave eram aceitos na validação mas enviados sem normalização; a chave agora é aparada antes da requisição.
 - medium — Blind Hunter apontou falta de cobertura para Data API não OK e falha de rede; adicionados testes separados para ambos, e ambos passam.
 - medium — Verification Gap Reviewer confirmou que o teste original de Auth 401 não cobria a falha da Data API após Auth bem-sucedida; adicionado caso específico que verifica o erro Data API e duas requisições.
-- medium — Os dois pares locais retornaram HTTP 401 na Data API, deixando a conectividade real pendente; requer conferir no painel o pareamento URL/chave e estado da API, sem revelar credenciais; diferido.
+- medium — O checker original consultava a raiz `/rest/v1/` e recebia HTTP 401; substituído pela consulta real e limitada a `profiles`, com aceitação específica de `PGRST205`; smoke check passou nos dois projetos.
 - medium — Duas tentativas iniciais do build encontraram EPERM antes de compilar, mas a tentativa final passou; confirmado como bloqueio transitório, sem pendência restante.
 - maybe-false — O mapeamento Vercel não pôde ser verificado; confirmar no painel os valores por Development/Preview/Production para determinar se há risco de mistura de dados; diferido até essa evidência.
 

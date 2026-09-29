@@ -5,6 +5,19 @@ const requiredVariables = [
   "NEXT_PUBLIC_SUPABASE_ANON_KEY",
 ];
 
+function isPublicSupabaseKey(key) {
+  if (key.startsWith("sb_publishable_")) return true;
+
+  const [, payload] = key.split(".");
+  if (!payload) return false;
+
+  try {
+    return JSON.parse(Buffer.from(payload, "base64url").toString("utf8")).role === "anon";
+  } catch {
+    return false;
+  }
+}
+
 export async function verifySupabaseEnvironment(env, fetchImpl = fetch) {
   for (const name of requiredVariables) {
     if (!env[name]?.trim()) {
@@ -32,9 +45,13 @@ export async function verifySupabaseEnvironment(env, fetchImpl = fetch) {
 
   const projectOrigin = projectUrl.origin;
   const publicKey = env.NEXT_PUBLIC_SUPABASE_ANON_KEY.trim();
+  if (!isPublicSupabaseKey(publicKey)) {
+    throw new Error("NEXT_PUBLIC_SUPABASE_ANON_KEY must be a publishable or legacy anon key");
+  }
+
   const endpoints = [
     ["Auth", new URL("/auth/v1/health", projectOrigin)],
-    ["Data", new URL("/rest/v1/", projectOrigin)],
+    ["Data", new URL("/rest/v1/profiles?select=id&limit=1", projectOrigin)],
   ];
 
   for (const [service, endpoint] of endpoints) {
@@ -48,7 +65,17 @@ export async function verifySupabaseEnvironment(env, fetchImpl = fetch) {
       throw new Error(`Supabase ${service} API could not be reached`);
     }
 
-    if (!response.ok) {
+    if (service === "Data" && response.status === 404) {
+      let errorCode;
+      try {
+        errorCode = (await response.json()).code;
+      } catch {
+        errorCode = undefined;
+      }
+      if (errorCode === "PGRST205") continue;
+    }
+
+    if (response.status !== 200) {
       throw new Error(`Supabase ${service} API returned HTTP ${response.status}`);
     }
   }
