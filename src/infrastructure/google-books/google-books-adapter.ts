@@ -1,11 +1,46 @@
-import type { BookSearchInput, BookSearchPort, BookSearchResult } from "@/domain/books";
+import type { BookDetails, BookDetailsPort, BookSearchInput, BookSearchPort, BookSearchResult } from "@/domain/books";
 
 const GOOGLE_BOOKS_API = "https://www.googleapis.com/books/v1/volumes";
 const GOOGLE_BOOKS_TIMEOUT_MS = 10_000;
-type GoogleBook = { id?: unknown; volumeInfo?: { title?: unknown; authors?: unknown; categories?: unknown; imageLinks?: { thumbnail?: unknown; smallThumbnail?: unknown }; infoLink?: unknown } };
+type GoogleBook = { id?: unknown; volumeInfo?: { title?: unknown; authors?: unknown; categories?: unknown; imageLinks?: { thumbnail?: unknown; smallThumbnail?: unknown }; infoLink?: unknown; description?: unknown } };
 type GoogleSearchResponse = { totalItems?: unknown; items?: unknown };
 
-export class GoogleBooksAdapter implements BookSearchPort {
+export class GoogleBooksNotFoundError extends Error {}
+
+function mapBookDetails(book: GoogleBook, requestedId: string): BookDetails {
+  const info = book.volumeInfo;
+  if (!info || typeof info.title !== "string") throw new Error("Google Books returned an invalid volume");
+  const thumbnail = info.imageLinks?.thumbnail ?? info.imageLinks?.smallThumbnail;
+  return {
+    id: typeof book.id === "string" ? book.id : requestedId,
+    localId: null,
+    title: info.title,
+    authors: Array.isArray(info.authors) ? info.authors.filter((item): item is string => typeof item === "string") : [],
+    categories: Array.isArray(info.categories) ? info.categories.filter((item): item is string => typeof item === "string") : [],
+    coverUrl: typeof thumbnail === "string" ? thumbnail.replace(/^http:/, "https:") : null,
+    description: typeof info.description === "string" ? info.description : "",
+    googleBooksUrl: typeof info.infoLink === "string" ? info.infoLink : `https://books.google.com/books?id=${encodeURIComponent(typeof book.id === "string" ? book.id : requestedId)}`,
+    averageRating: null,
+    reviewCount: 0,
+    reviews: [],
+    vibes: [],
+  };
+}
+
+export class GoogleBooksAdapter implements BookSearchPort, BookDetailsPort {
+  async getByExternalId(id: string): Promise<BookDetails> {
+    const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
+    if (!apiKey) throw new Error("Google Books is not configured");
+    const url = new URL(`${GOOGLE_BOOKS_API}/${encodeURIComponent(id)}`);
+    url.searchParams.set("key", apiKey);
+    const response = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(GOOGLE_BOOKS_TIMEOUT_MS) });
+    if (response.status === 404) throw new GoogleBooksNotFoundError("Google Books volume not found");
+    if (!response.ok) throw new Error(`Google Books returned ${response.status}`);
+    const payload: GoogleBook = await response.json();
+    if (!payload || typeof payload !== "object") throw new Error("Google Books returned an invalid response");
+    return mapBookDetails(payload, id);
+  }
+
   async search(input: BookSearchInput): Promise<{ items: BookSearchResult[]; totalItems: number }> {
     const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
     if (!apiKey) throw new Error("Google Books is not configured");

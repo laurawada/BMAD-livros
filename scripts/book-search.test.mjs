@@ -23,9 +23,15 @@ function loadTypeScript(relativePath, aliases = {}) {
 
 const service = loadTypeScript("src/server/search-books.ts");
 const adapter = loadTypeScript("src/infrastructure/google-books/google-books-adapter.ts");
+let supabaseConfigured = false;
+let localRatings = new Map();
 const route = loadTypeScript("src/app/api/books/search/route.ts", {
   "next/server": { NextResponse: { json: (body, init = {}) => new Response(JSON.stringify(body), { ...init, headers: { "content-type": "application/json", ...init.headers } }) } },
   "@/infrastructure/google-books/google-books-adapter": adapter,
+  "@/infrastructure/supabase/book-discovery-adapter": {
+    isSupabaseConfigured: () => supabaseConfigured,
+    readRatingsByExternalIds: async () => localRatings,
+  },
   "@/server/search-books": service,
 });
 
@@ -69,6 +75,24 @@ test("busca por título preserva a ordem e calcula próxima página", async () =
   assert.ok(options.signal instanceof AbortSignal);
   assert.deepEqual(data.items.map((book) => book.id), ["b2", "b1"]);
   assert.equal(data.hasMore, true);
+});
+
+test("acrescenta média local quando disponível sem mudar a ordem do Google", async () => {
+  supabaseConfigured = true;
+  localRatings = new Map([["b2", 4.5]]);
+  try {
+    const data = await withProvider(async () => Response.json({ totalItems: 2, items: [volume("b2", "Segundo"), volume("b1", "Primeiro")] }), async () => {
+      const response = await route.GET(request({ query: "Duna" }));
+      assert.equal(response.status, 200);
+      return response.json();
+    });
+    assert.deepEqual(data.items.map((book) => book.id), ["b2", "b1"]);
+    assert.equal(data.items[0].localAverageRating, 4.5);
+    assert.equal(data.items[1].localAverageRating, undefined);
+  } finally {
+    supabaseConfigured = false;
+    localRatings = new Map();
+  }
 });
 
 test("busca por autor pagina corretamente e não oferece outra página quando termina", async () => {

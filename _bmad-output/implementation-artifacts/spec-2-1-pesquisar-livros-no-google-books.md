@@ -68,6 +68,8 @@ context:
 
 ## Spec Change Log
 
+- 2026-10-01: Route Handler passou a anexar a média local da view `book_discovery_feed` quando existe snapshot avaliado, sem alterar os resultados nem a ordem do Google Books. A verificação desta alteração ainda está pendente.
+
 ## Review Triage Log
 
 | Finding | Verdict and evidence | Route / outcome |
@@ -85,7 +87,7 @@ context:
 ## Verification
 
 **Commands:**
-- `npm run test:book-search` -- 7 testes passaram.
+- `npm run test:book-search` -- 8 testes passaram, incluindo enriquecimento de médias locais sem alterar ordem Google.
 - `npm run test:supabase-env` -- 11 testes passaram.
-- `npm run lint` -- esperado: sem erros de lint nos arquivos alterados.
-- `npm run build` -- esperado: build de produção conclui.
+- `npm run lint` -- passou.
+- `npm run build` -- build de produção passou.

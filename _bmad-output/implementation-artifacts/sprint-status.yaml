@@ -47,8 +47,8 @@ development_status:
 
   epic-2: in-progress
   2-1-pesquisar-livros-no-google-books: review
-  2-2-consultar-a-ficha-de-um-livro: backlog
-  2-3-explorar-a-página-inicial: backlog
+  2-2-consultar-a-ficha-de-um-livro: review
+  2-3-explorar-a-página-inicial: review
   epic-2-retrospective: optional
 
   epic-3: backlog

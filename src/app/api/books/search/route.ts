@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleBooksAdapter } from "@/infrastructure/google-books/google-books-adapter";
+import { isSupabaseConfigured, readRatingsByExternalIds } from "@/infrastructure/supabase/book-discovery-adapter";
 import { InvalidBookSearchError, searchBooks } from "@/server/search-books";
 
 export async function GET(request: NextRequest) {
@@ -11,6 +12,14 @@ export async function GET(request: NextRequest) {
   try {
     if (field !== "title" && field !== "author") throw new InvalidBookSearchError("Invalid search field");
     const result = await searchBooks({ query: params.get("query") ?? "", field, page }, new GoogleBooksAdapter());
+    if (isSupabaseConfigured()) {
+      try {
+        const ratings = await readRatingsByExternalIds(result.items.map(({ id }) => id));
+        result.items = result.items.map((book) => ({ ...book, localAverageRating: ratings.get(book.id) }));
+      } catch (error) {
+        console.error("Local book ratings lookup failed", error);
+      }
+    }
     return NextResponse.json(result, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     if (error instanceof InvalidBookSearchError) {

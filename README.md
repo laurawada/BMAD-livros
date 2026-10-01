@@ -45,6 +45,8 @@ Configure as mesmas duas variáveis conforme o destino do deploy:
 
 Em cada ambiente Vercel, cadastre `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` usando somente os valores do projeto correspondente. Faça novo deploy após alterar variáveis, pois valores `NEXT_PUBLIC_` são incorporados ao bundle durante o build. Confirme no painel que a URL de produção e a de desenvolvimento são distintas.
 
+O feed público da ficha e da página inicial usa as tabelas locais `books`, `reviews` e `book_vibes`, agregadas pela view `book_discovery_feed`. A migration `supabase/migrations/20261001000000_book_discovery_community.sql` define esse contrato e as policies RLS; ela usa `security_invoker` e requer PostgreSQL 15 ou superior. Antes de usar a aplicação com dados reais, aplique-a ao projeto Supabase de desenvolvimento pelo SQL Editor; alinhe com o grupo antes de aplicar em produção ou combinar com migrations de outra pessoa. O código usa somente a chave anon/public e as leituras permanecem sujeitas à RLS.
+
 Para verificar, sem modificar dados, que Auth e Data API respondem para o projeto configurado localmente, o smoke check consulta Auth health e `profiles?select=id&limit=1`. A resposta `404 PGRST205` é aceita quando a tabela ainda não foi criada; outras respostas de erro falham:
 
 ```bash
