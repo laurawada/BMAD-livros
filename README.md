@@ -45,6 +45,14 @@ Configure as mesmas duas variáveis conforme o destino do deploy:
 
 Em cada ambiente Vercel, cadastre `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` usando somente os valores do projeto correspondente. Faça novo deploy após alterar variáveis, pois valores `NEXT_PUBLIC_` são incorporados ao bundle durante o build. Confirme no painel que a URL de produção e a de desenvolvimento são distintas.
 
+Configure também `SHELF_SNAPSHOT_SECRET` com um segredo aleatório de pelo menos 32 bytes em cada ambiente. Ele assina snapshots de livros no servidor antes de enviá-los ao componente da estante; nunca use um valor `NEXT_PUBLIC_`. Gere um valor com:
+
+```bash
+node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
+```
+
+Armazene o mesmo valor no Vault do projeto Supabase correspondente, com o nome `shelf_snapshot_secret` (a migration usa esse segredo para validar a assinatura dentro da RPC). Desenvolvimento/Preview e Production devem usar valores independentes e cada valor deve coincidir entre o ambiente server-side e o Vault daquele mesmo projeto. Nunca inclua o valor no repositório, em `NEXT_PUBLIC_` ou em logs. A migration não provisiona esse segredo.
+
 Para verificar, sem modificar dados, que Auth e Data API respondem para o projeto configurado localmente:
 
 ```bash
