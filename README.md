@@ -53,3 +53,7 @@ npm run test:supabase-env
 ```
 
 O verificador imprime apenas o resultado ou a categoria/status HTTP do erro; não imprime URL, chave nem corpo da resposta. `.env.local` e outros arquivos `.env*` são ignorados pelo Git; `.env.example` contém apenas placeholders e pode ser versionado.
+
+## Google Books
+
+A busca de livros usa a Google Books API v1 por um Route Handler no servidor. Copie `.env.example` para `.env.local` e configure `GOOGLE_BOOKS_API_KEY` com uma chave restrita à Books API. Essa variável não usa o prefixo `NEXT_PUBLIC_` e nunca deve ser incluída no código do navegador. Pesquisar não grava livros nem metadados no banco de dados.

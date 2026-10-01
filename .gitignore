@@ -2,3 +2,7 @@ node_modules/
 .next/
 .env*
 !.env.example
+
+# Local package cache and TypeScript build output
+.npm-cache/
+tsconfig.tsbuildinfo
