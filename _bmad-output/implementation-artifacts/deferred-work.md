@@ -22,3 +22,12 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-auth-cleanup-failure-logging.md`
   summary: Anunciar mensagens de sucesso do cadastro com uma região acessível.
   evidence: A mensagem de sucesso atual não usa `role="status"` nem `aria-live`.
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-2-entrar-com-e-mail-e-senha.md`
+  summary: Antes de abrir o sistema para usuários reais, versionar o schema de perfis e aplicar/testar políticas RLS de propriedade.
+  evidence: Por decisão registrada na Story 1.2, esta entrega negará acesso não autenticado no servidor, mas não criará migrations nem protegerá o banco com RLS; não liberar dados pessoais a usuários reais antes de concluir esta pendência.
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-2-entrar-com-e-mail-e-senha.md`
+  summary: Implementar uma ação explícita de saída que invalide a sessão Supabase e limpe os cookies de autenticação.
+  evidence: A Story 1.2 entrega entrada com sessão persistente, mas não define fluxo de saída; nenhum controle ou Server Action de logout existe.
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-2-entrar-com-e-mail-e-senha.md`
+  summary: Adicionar teste de interface para a mensagem de erro genérica visível na tela de entrada.
+  evidence: A suíte atual verifica o retorno seguro da Server Action, mas não renderiza componentes React nem verifica o alerta; o projeto não possui infraestrutura de teste de UI.
