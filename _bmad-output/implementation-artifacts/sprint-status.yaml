@@ -57,6 +57,6 @@ development_status:
   3-3-associar-vibes-a-um-livro: backlog
   epic-3-retrospective: optional
 
-  epic-4: backlog
-  4-1-consultar-perfil-e-atividade-pública: backlog
+  epic-4: in-progress
+  4-1-consultar-perfil-e-atividade-pública: review
   epic-4-retrospective: optional
