@@ -31,3 +31,12 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-1-2-entrar-com-e-mail-e-senha.md`
   summary: Adicionar teste de interface para a mensagem de erro genérica visível na tela de entrada.
   evidence: A suíte atual verifica o retorno seguro da Server Action, mas não renderiza componentes React nem verifica o alerta; o projeto não possui infraestrutura de teste de UI.
+- source_spec: `_bmad-output/implementation-artifacts/spec-global-app-styling.md`
+  summary: Adicionar tokens autocomplete aos campos de nome, e-mail e senha do cadastro.
+  evidence: Os campos existentes não identificam seu propósito para navegadores e gerenciadores de senha; essa alteração de formulário não faz parte da solicitação de CSS.
+- source_spec: `_bmad-output/implementation-artifacts/spec-global-app-styling.md`
+  summary: Adicionar link de retorno ao login na página de cadastro.
+  evidence: A tela de cadastro não oferece retorno direto para `/entrar`; trata-se de uma melhoria de navegação anterior e não necessária para o stylesheet.
+- source_spec: `_bmad-output/implementation-artifacts/spec-global-app-styling.md`
+  summary: Anunciar dinamicamente o sucesso do cadastro com uma região acessível.
+  evidence: A mensagem de sucesso não tem `role="status"` nem `aria-live`; a revisão identificou esta melhoria fora do escopo de estilo visual.

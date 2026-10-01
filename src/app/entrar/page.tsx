@@ -26,12 +26,12 @@ export default function EntrarPage() {
   }
 
   return (
-    <main style={{ maxWidth: 480, margin: '4rem auto', padding: '0 1rem' }}>
+    <main className="page page--auth">
       <h1>Entrar</h1>
-      <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1rem' }}>
+      <form className="auth-form" onSubmit={handleSubmit}>
         <label>
           E-mail
-          <input name="email" type="email" autoComplete="email" required style={{ display: 'block', width: '100%' }} />
+          <input name="email" type="email" autoComplete="email" required />
         </label>
 
         <label>
@@ -41,7 +41,6 @@ export default function EntrarPage() {
             type="password"
             autoComplete="current-password"
             required
-            style={{ display: 'block', width: '100%' }}
           />
         </label>
 
@@ -51,7 +50,7 @@ export default function EntrarPage() {
       </form>
 
       {error ? (
-        <p role="alert" style={{ color: '#b91c1c', marginTop: '1rem' }}>
+        <p role="alert">
           {error}
         </p>
       ) : null}

@@ -30,17 +30,17 @@ export default function CadastroPage() {
   }
 
   return (
-    <main style={{ maxWidth: 480, margin: '4rem auto', padding: '0 1rem' }}>
+    <main className="page page--auth">
       <h1>Criar conta</h1>
-      <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1rem' }}>
+      <form className="auth-form" onSubmit={handleSubmit}>
         <label>
           Nome
-          <input name="name" type="text" required style={{ display: 'block', width: '100%' }} />
+          <input name="name" type="text" required />
         </label>
 
         <label>
           E-mail
-          <input name="email" type="email" required style={{ display: 'block', width: '100%' }} />
+          <input name="email" type="email" required />
         </label>
 
         <label>
@@ -50,7 +50,6 @@ export default function CadastroPage() {
             type="password"
             minLength={8}
             required
-            style={{ display: 'block', width: '100%' }}
           />
         </label>
 
@@ -60,12 +59,12 @@ export default function CadastroPage() {
       </form>
 
       {error ? (
-        <p role="alert" style={{ color: '#b91c1c', marginTop: '1rem' }}>
+        <p role="alert">
           {error}
         </p>
       ) : null}
 
-      {status ? <p style={{ color: '#166534', marginTop: '1rem' }}>{status}</p> : null}
+      {status ? <p className="feedback-success">{status}</p> : null}
     </main>
   );
 }
