@@ -54,6 +54,7 @@ node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
 Armazene o mesmo valor no Vault do projeto Supabase correspondente, com o nome `shelf_snapshot_secret` (a migration usa esse segredo para validar a assinatura dentro da RPC). Desenvolvimento/Preview e Production devem usar valores independentes e cada valor deve coincidir entre o ambiente server-side e o Vault daquele mesmo projeto. Nunca inclua o valor no repositório, em `NEXT_PUBLIC_` ou em logs. A migration não provisiona esse segredo.
 
 Para verificar, sem modificar dados, que Auth e Data API respondem para o projeto configurado localmente:
+Para verificar, sem modificar dados, que Auth e Data API respondem para o projeto configurado localmente, o smoke check consulta Auth health e `profiles?select=id&limit=1`. A resposta `404 PGRST205` é aceita quando a tabela ainda não foi criada; outras respostas de erro falham:
 
 ```bash
 npm run verify:supabase
