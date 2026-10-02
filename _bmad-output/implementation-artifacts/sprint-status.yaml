@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 09-27-2026 00:00
-last_updated: 09-28-2026 23:57
+last_updated: 09-30-2026 00:00
 project: Letterboxd de Livros
 project_key: NOKEY
 tracking_system: file-system
@@ -40,9 +40,9 @@ development_status:
   0-2-configurar-ambientes-supabase-separados-sp-2: done
   epic-0-retrospective: optional
 
-  epic-1: backlog
+  epic-1: in-progress
   1-1-criar-conta-e-perfil: backlog
-  1-2-entrar-com-e-mail-e-senha: backlog
+  1-2-entrar-com-e-mail-e-senha: review
   epic-1-retrospective: optional
 
   epic-2: backlog

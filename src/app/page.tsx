@@ -1,14 +1,13 @@
-import styles from "./page.module.css";
-
-export default function Home() {
+export default function HomePage() {
   return (
-    <main className={styles.page}>
-      <div className={styles.main}>
-        <div className={styles.intro}>
-          <h1>Letterboxd de Livros</h1>
-          <p>A base da aplicação está pronta para receber as próximas histórias.</p>
-        </div>
-      </div>
+    <main className="page page--home">
+      <h1>Letterboxd de Livros</h1>
+      <p>Seu fluxo inicial de cadastro e perfil está pronto para continuar.</p>
+      <nav className="home-nav" aria-label="Navegação principal">
+        <a href="/entrar">Entrar</a>
+        <a href="/minha-conta">Minha conta</a>
+        <a href="/cadastro">Criar conta</a>
+      </nav>
     </main>
   );
 }
