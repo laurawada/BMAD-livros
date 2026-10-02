@@ -1,25 +1,16 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: "Letterboxd de Livros",
-  description: "Uma comunidade para descobrir e registrar leituras.",
+  title: 'Letterboxd de Livros',
+  description: 'Uma comunidade para descobrir e registrar leituras.',
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="pt-BR">
       <body>{children}</body>
     </html>
   );
