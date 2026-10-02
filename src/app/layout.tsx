@@ -5,7 +5,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Letterboxd de Livros',
-  description: 'Descubra, avalie e organize suas leituras.',
+  description: 'Uma comunidade para descobrir e registrar leituras.',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

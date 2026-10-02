@@ -35,9 +35,9 @@ project_key: NOKEY
 tracking_system: file-system
 story_location: _bmad-output/implementation-artifacts
 development_status:
-  epic-0: backlog
-  0-1-inicializar-o-projeto-a-partir-do-starter-next-js-sp-1: backlog
-  0-2-configurar-ambientes-supabase-separados-sp-2: backlog
+  epic-0: in-progress
+  0-1-inicializar-o-projeto-a-partir-do-starter-next-js-sp-1: review
+  0-2-configurar-ambientes-supabase-separados-sp-2: done
   epic-0-retrospective: optional
 
   epic-1: in-progress

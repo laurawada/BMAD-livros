@@ -2,12 +2,17 @@
   "name": "letterboxd-de-livros",
   "private": true,
   "version": "0.1.0",
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "test": "node --test --import tsx"
+  "lint": "eslint src scripts",
+  "test": "node --test --import tsx",
+  "verify:supabase": "node --env-file=.env.local scripts/verify-supabase-env.mjs",
+  "test:supabase-env": "node --test scripts/verify-supabase-env.test.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
