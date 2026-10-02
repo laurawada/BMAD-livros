@@ -19,7 +19,7 @@ test("redirects an unauthenticated shelf request to login", () => {
       ),
     /Redirected/,
   );
-  assert.deepEqual(destinations, ["/login"]);
+  assert.deepEqual(destinations, ["/entrar"]);
 });
 
 test("does not redirect for a non-authentication error", () => {

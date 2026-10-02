@@ -14,11 +14,8 @@ export default function Home() {
           <Link className={styles.activeLink} href="/">Início</Link>
           <Link href="/buscar">Buscar livros</Link>
           <Link href="/estante">Minha estante</Link>
-          <Link href="/entrar">Entrar</Link>
-          <Link href="/minha-conta">Minha conta</Link>
-          <Link href="/cadastro">Criar conta</Link>
+          <Link className={styles.accountLink} href="/minha-conta">Minha conta</Link>
         </nav>
-        <Link className={styles.headerCta} href="/buscar">Encontrar um livro</Link>
       </header>
 
       <div className={styles.content}>
