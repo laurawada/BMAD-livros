@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { SHELF_STATUS_FORM_FIELD } from "@/domain/shelf";
+import { SHELF_STATUS_FORM_FIELD, type ShelfEntry } from "@/domain/shelf";
 import { signBookSnapshot } from "@/server/shelf-snapshot";
 import { createShelfActionHandlers } from "./shelf-action-handlers";
 
@@ -9,14 +9,23 @@ test("passes the submitted status through the action handler and revalidates she
   const originalSecret = process.env.SHELF_SNAPSHOT_SECRET;
   process.env.SHELF_SNAPSHOT_SECRET = "test-secret-with-at-least-32-bytes";
   const calls: unknown[][] = [];
+  const shelfEntry: ShelfEntry = {
+    id: "shelf-1",
+    bookId: "book-1",
+    status: "Quero ler",
+    updatedAt: "2026-10-01T00:00:00.000Z",
+    book: { externalId: "google-1", title: "Book", author: "Author" },
+  };
   const handlers = createShelfActionHandlers({
     async createService() {
       return {
         async addBook(snapshot, payload, signature) {
           calls.push(["add", snapshot, payload, signature]);
+          return shelfEntry;
         },
         async changeStatus(bookId, status) {
           calls.push(["change", bookId, status]);
+          return shelfEntry;
         },
       };
     },

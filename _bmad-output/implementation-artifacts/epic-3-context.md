@@ -4,7 +4,7 @@
 
 ## Goal
 
-Permitir que uma pessoa autenticada mantenha sua estante, registre e administre uma avaliação e associe vibes a livros, sem duplicar o status de leitura nem deixar dados inconsistentes. Esse núcleo torna o fluxo de encontrar, avaliar e guardar uma leitura confiável e fornece os dados usados por fichas e perfis.
+Permitir que leitores autenticados avaliem livros, mantenham um status único de leitura e associem vibes. O épico completa o fluxo de encontrar e guardar leituras com estado íntegro e privado, e fornece dados consistentes para fichas e perfis.
 
 ## Stories
 
@@ -14,27 +14,27 @@ Permitir que uma pessoa autenticada mantenha sua estante, registre e administre 
 
 ## Requirements & Constraints
 
-- Uma entrada `Shelf` por usuário/livro é a única fonte do status: `Quero ler`, `Lendo`, `Lido` ou `Abandonei`. Adicionar sem avaliar inicia em `Quero ler`; repetição preserva o status, mudanças atualizam a mesma entrada e não há remoção no MVP.
-- Avaliações exigem texto não vazio, nota entre 1 e 5 em incrementos de meia estrela e escolha explícita de status. Só existe uma avaliação ativa por usuário/livro. Editar preserva `createdAt` e avança `updatedAt`; excluir remove apenas a avaliação, nunca a entrada ou status da estante.
-- Vibes são não vazias, normalizadas para minúsculas e sem espaços externos, únicas por usuário/livro/valor canônico. Na ficha, cada valor distinto aparece uma vez.
-- Médias de livro e usuário vêm de `AVG` das avaliações ativas da aplicação e refletem a próxima leitura após gravação, edição ou exclusão. Não importar notas do Google Books nem manter médias em cache ou em atualização assíncrona.
-- Escritas precisam preservar integridade e privacidade: RLS autoriza apenas o proprietário; consultas de terceiros não devem expor estantes completas ou status privados. Erros apresentados ao usuário são estáveis e seguros; detalhes técnicos ficam no servidor, sem credenciais.
+- Shelf é a fonte única do status: `Quero ler`, `Lendo`, `Lido` ou `Abandonei`. Há no máximo uma entrada por usuário/livro; adicionar sem avaliar inicia em `Quero ler`, repetir preserva o estado e a entrada não pode ser removida no MVP.
+- Há no máximo uma avaliação ativa por usuário/livro. A avaliação exige texto não vazio e nota entre 1 e 5 em incrementos de meia estrela; criar ou editar exige status explícito e altera a mesma Shelf. Editar preserva `createdAt`; excluir Review não remove nem altera Shelf.
+- Vibes não vazias são canônicas (minúsculas, sem espaços externos) e únicas por usuário/livro/valor. A ficha apresenta cada valor distinto uma vez.
+- Médias próprias de livro e usuário são derivadas das avaliações ativas da aplicação. Não importar notas do Google Books, armazenar médias em cache ou depender de atualização assíncrona.
+- Dados privados permanecem limitados ao proprietário por autorização no servidor e RLS. Atividade pública expõe somente leituras `Lido` por uma projeção restrita, nunca a estante completa. Erros ao usuário são estáveis e seguros; detalhes técnicos ficam no servidor.
 
 ## Technical Decisions
 
-- Manter a aplicação como monólito modular Next.js: interface em `src/app`, orquestração server-only em `src/server`, regras e ports em `src/domain`, adapters em `src/infrastructure`. A interface não grava tabelas diretamente; use cases no servidor chamam adapters Supabase.
-- PostgreSQL/Supabase é a fonte canônica. Usar UUIDs para IDs locais, UUID do Supabase Auth como `userId`, `timestamptz` para datas e migrations SQL versionadas. Aplicar constraints de banco para unicidade, status permitido, texto não vazio e invariantes de rating/vibe; rating deve ser armazenado como `NUMERIC` exato, sem arredondamento silencioso.
-- Operações de avaliação, estante e vibe adotam o livro por `externalId` único quando necessário e gravam as mudanças relacionadas atomicamente. A RPC/transação compartilhada deve ser `SECURITY INVOKER`, operar com identidade verificada e respeitar RLS. Após adoção, usar o UUID local; guardar snapshot inicial dos metadados e não sobrescrevê-lo em buscas posteriores.
-- Usar cliente Supabase SSR por requisição e testar permissões de leitura/escrita permitidas e negadas. Reviews e vibes exigem autenticação e propriedade; nenhum segredo de serviço chega ao navegador.
-- Derivar agregados durante a leitura no banco. Para edição da Review manter `createdAt`; avançar `updatedAt` da Review e da Shelf nas respectivas mudanças. Não adicionar ORM, serviço separado, fila ou job de atualização de médias.
+- Manter um monólito modular Next.js: apresentação em `src/app`, operações server-only em `src/server`, regras e contratos em `src/domain`, e adapters em `src/infrastructure`. A interface não grava tabelas diretamente; não introduzir serviço separado, fila ou ORM.
+- PostgreSQL/Supabase é a fonte canônica. Usar UUIDs locais, identidade Supabase Auth verificada, `timestamptz`, migrations SQL versionadas e constraints para unicidade e invariantes. Armazenar notas como `NUMERIC` exato, sem arredondamento silencioso.
+- Na primeira escrita, adotar atomicamente o livro por `externalId` único e guardar o snapshot de metadados; escritas relacionadas de Book, Shelf, Review e vibe compartilham a transação/RPC `SECURITY INVOKER`, sob RLS e identidade verificada. Buscas posteriores não sobrescrevem o snapshot.
+- Usar cliente Supabase SSR por requisição, privilégios mínimos e testes de autorização permitida e negada. Nenhuma credencial privilegiada pode chegar ao navegador.
+- Calcular agregados durante a leitura. Alterações em Review e Shelf atualizam seus próprios timestamps conforme a semântica do evento; não manter médias em jobs ou cache.
 
 ## UX & Interaction Patterns
 
-- Na ficha `/livro/:id`, reunir as ações de avaliar, escolher status, adicionar à estante e associar vibes, mantendo o fluxo central com poucos passos. A rota `/estante` agrupa entradas pelos quatro status e mostra capa e informações básicas do livro.
-- Capas são o elemento visual principal; manter interface simples, identidade visual própria e não copiar diretamente plataformas de avaliação de filmes. Não há contrato UX formal com critérios verificáveis; estas são as diretrizes gerais disponíveis.
+- A ficha `/livro/:id` concentra avaliação, status, inclusão na estante e vibes em poucos passos. `/estante` agrupa os quatro status e mostra capa e dados básicos do livro.
+- Capas são o principal sinal visual; preservar identidade própria, interface simples e navegação clara, sem copiar plataformas de avaliação de filmes. A orientação disponível é geral e não define critérios UX verificáveis adicionais.
 
 ## Cross-Story Dependencies
 
-- As três stories compartilham schema, constraints, RLS, migrations e o contrato de transação para adoção do livro e escritas. Coordenar pelo owner do épico; stories deste épico não são trabalho paralelo independente.
-- Epic 3 depende do UUID/identidade verificada e contrato de Auth do Epic 1, e do contrato `Book`/adoption por `externalId` e snapshot do Epic 2. Alinhar esses contratos antes da integração.
-- Epic 4 consome entradas `Lido` e avaliações ativas para atividade e médias de perfil; a projeção pública continua limitada a leituras concluídas, sem expor a estante completa.
+- As três stories compartilham schema, constraints, RLS, migrations e adoção transacional; coordená-las pelo owner do épico, sem tratá-las como trabalho independente em paralelo.
+- O épico depende da identidade/Auth do Epic 1 e do contrato Book, adoção por `externalId` e snapshot do Epic 2.
+- O Epic 4 consome Reviews ativas e leituras `Lido`; sua consulta pública deve continuar limitada à projeção de conclusão, sem revelar outros status ou a estante completa.
