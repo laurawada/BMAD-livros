@@ -9,7 +9,7 @@ export function redirectUnauthenticatedShelf(
     error instanceof ShelfUseCaseError &&
     error.code === "UNAUTHENTICATED"
   ) {
-    redirectTo("/login");
+    redirectTo("/entrar");
     return true;
   }
 

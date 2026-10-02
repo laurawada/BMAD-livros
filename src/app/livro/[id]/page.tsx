@@ -5,11 +5,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import type { BookDetails } from "@/domain/books";
+import type { BookSnapshot } from "@/domain/shelf";
+import { signBookForShelf } from "@/app/actions/book-actions";
+import { BookActionsClient } from "@/app/components/book-actions-client";
 import styles from "./page.module.css";
 
 export default function BookDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<BookDetails | null>(null);
+  const [signedSnapshot, setSignedSnapshot] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -39,6 +43,19 @@ export default function BookDetailsPage() {
     return () => controller.abort();
   }, [id]);
 
+  useEffect(() => {
+    if (!book) return;
+    const snapshot: BookSnapshot = {
+      externalId: book.id,
+      title: book.title,
+      author: book.authors.join(", ") || "Autor desconhecido",
+      coverUrl: book.coverUrl,
+      genre: book.categories[0] ?? null,
+      description: book.description || null,
+    };
+    void signBookForShelf(snapshot).then(setSignedSnapshot).catch(() => setSignedSnapshot(null));
+  }, [book]);
+
   return (
     <main className={styles.page}>
       <div className={styles.container}>
@@ -54,6 +71,14 @@ export default function BookDetailsPage() {
             <h1>{book.title}</h1>
             <p className={styles.author}>{book.authors.join(", ") || "Autor desconhecido"}</p>
             <p className={styles.attribution}>Dados bibliográficos fornecidos pelo Google Books</p>
+            {signedSnapshot && <BookActionsClient signedSnapshot={signedSnapshot} snapshot={{
+              externalId: book.id,
+              title: book.title,
+              author: book.authors.join(", ") || "Autor desconhecido",
+              coverUrl: book.coverUrl,
+              genre: book.categories[0] ?? null,
+              description: book.description || null,
+            }} />}
             {book.averageRating !== null && book.reviewCount > 0 && <p className={styles.rating}>★ {book.averageRating.toFixed(1)} <span>· {book.reviewCount} {book.reviewCount === 1 ? "avaliação" : "avaliações"} da comunidade</span></p>}
             {book.communityUnavailable && <p className={styles.communityNotice}>As avaliações da comunidade estão temporariamente indisponíveis.</p>}
             <section className={styles.description}>

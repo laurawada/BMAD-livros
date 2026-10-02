@@ -28,6 +28,12 @@ export function createShelfActionHandlers(dependencies: {
       return { kind: "error", message: error.message };
     }
 
+    const message = error instanceof Error ? error.message : "";
+    if (/signature|snapshot|42501|Authentication required/i.test(message)) {
+      console.error("Shelf action failed due to Supabase snapshot/auth configuration.", error);
+      return { kind: "error", message: "A sessão ou a assinatura do livro não foi aceita pelo Supabase. Entre novamente e tente outra vez." };
+    }
+
     console.error("Shelf action failed.", error);
     return failure;
   }

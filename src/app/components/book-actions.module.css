@@ -1,0 +1,41 @@
+.actions {
+  display: grid;
+  gap: 18px;
+  margin-top: 26px;
+  padding: 20px;
+  border: 1px solid #dfe8e3;
+  border-radius: 16px;
+  background: #f7faf8;
+}
+.form {
+  display: grid;
+  gap: 8px;
+  padding-top: 18px;
+  border-top: 1px solid #e1e9e5;
+}
+.title { margin: 0 0 4px; font-size: 1.15rem; color: #20332e; }
+.label { color: #53635f; font-size: .86rem; font-weight: 700; }
+.select, .textarea {
+  width: 100%;
+  border: 1px solid #cbd9d3;
+  border-radius: 10px;
+  background: #fff;
+  color: #243631;
+  font: inherit;
+  padding: 10px 12px;
+}
+.textarea { resize: vertical; min-height: 96px; line-height: 1.5; }
+.select:focus, .textarea:focus { outline: 3px solid #cfe8df; border-color: #39766a; }
+.button {
+  justify-self: start;
+  margin-top: 5px;
+  border: 0;
+  border-radius: 999px;
+  padding: 11px 17px;
+  background: #28685c;
+  color: #fff;
+  font-weight: 750;
+  cursor: pointer;
+}
+.button:disabled { opacity: .65; cursor: wait; }
+.message { min-height: 1.2em; margin: 3px 0 0; color: #53635f; font-size: .88rem; }
