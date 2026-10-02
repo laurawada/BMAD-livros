@@ -9,6 +9,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "lint": "eslint src scripts",
+    "verify:supabase": "node --env-file=.env.local scripts/verify-supabase-env.mjs",
+    "test:book-details": "node --test scripts/book-details.test.mjs",
+    "test:supabase-env": "node --test scripts/verify-supabase-env.test.mjs",
+    "test:book-search": "node --test scripts/book-search.test.mjs"
   "lint": "eslint src scripts",
   "test": "node --test --import tsx",
   "verify:supabase": "node --env-file=.env.local scripts/verify-supabase-env.mjs",

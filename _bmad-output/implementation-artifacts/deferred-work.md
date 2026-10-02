@@ -1,3 +1,9 @@
+- source_spec: none
+  summary: Implementar a ficha de detalhes do livro com metadados e avaliações da comunidade (Story 2.2).
+  evidence: Foi separada da busca por ser uma entrega de produto independente e revisável; fica adiada enquanto a Story 2.1 é implementada primeiro.
+- source_spec: none
+  summary: Implementar a página inicial com livros e resenhas recentes (Story 2.3).
+  evidence: Foi separada da busca por ser uma entrega de produto independente e revisável; fica adiada enquanto a Story 2.1 é implementada primeiro.
 - source_spec: `_bmad-output/implementation-artifacts/spec-auth-cleanup-failure-logging.md`
   summary: Corrigir o script de lint para funcionar com Next.js 16.
   evidence: `npm run lint` falha porque `next lint` interpreta `lint` como diretório; não foi alterado nesta tarefa.
