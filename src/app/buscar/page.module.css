@@ -1,0 +1,28 @@
+.page { min-height: 100vh; background: #f6f7f8; color: #172322; padding: 48px 24px 80px; }
+.container { max-width: 900px; margin: 0 auto; }
+.back { color: #42645d; text-decoration: none; font-weight: 600; }
+.eyebrow { margin: 44px 0 8px; color: #39766a; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: .78rem; }
+.container h1 { margin: 0; font-size: clamp(2rem, 5vw, 3rem); letter-spacing: -.04em; }
+.lead { color: #596866; margin: 10px 0 28px; }
+.form { background: white; border: 1px solid #e1e7e5; border-radius: 18px; padding: 20px; }
+.queryLabel { display: block; margin-bottom: 9px; font-weight: 650; }
+.controls { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; }
+.controls input, .controls select { min-height: 48px; border: 1px solid #ced8d5; border-radius: 10px; padding: 0 13px; background: white; color: inherit; font: inherit; }
+.controls button, .message button, .next { border: 0; border-radius: 10px; padding: 0 19px; min-height: 48px; background: #28685c; color: white; font: inherit; font-weight: 650; cursor: pointer; }
+button:disabled { opacity: .65; cursor: wait; }
+.status, .count { color: #53635f; margin: 24px 0 12px; }
+.results { display: grid; gap: 14px; padding: 0; list-style: none; }
+.card { display: flex; gap: 20px; background: white; border: 1px solid #e1e7e5; border-radius: 16px; padding: 16px; }
+.cover, .coverPlaceholder { width: 112px; height: 160px; object-fit: cover; border-radius: 7px; background: #e8eeec; flex: none; }
+.coverPlaceholder { display: grid; place-items: center; color: #677570; font-size: .85rem; }
+.bookInfo h2 { margin: 0 0 6px; font-size: 1.25rem; }
+.bookInfo p { margin: 7px 0; }
+.category { color: #39766a; font-size: .78rem; font-weight: 700; text-transform: uppercase; }
+.author { color: #5b6865; }
+.attribution { color: #687672; font-size: .82rem; }
+.googleLink { display: inline-block; margin-top: 5px; color: #28685c; font-weight: 700; }
+.message { margin-top: 22px; border-radius: 14px; padding: 18px; background: #fff; border: 1px solid #e1e7e5; }
+.message h2, .message p { margin-top: 0; }
+.message button { padding: 0 14px; min-height: 42px; }
+.next { display: block; margin: 24px auto 0; }
+@media (max-width: 640px) { .page { padding: 28px 16px 56px; } .controls { grid-template-columns: 1fr 1fr; } .controls input { grid-column: 1 / -1; } .card { gap: 14px; padding: 12px; } .cover, .coverPlaceholder { width: 90px; height: 130px; } }

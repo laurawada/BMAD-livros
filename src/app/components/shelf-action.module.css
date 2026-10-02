@@ -1,0 +1,68 @@
+.action,
+.statusForm {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.action p,
+.statusForm p {
+  flex-basis: 100%;
+  min-height: 1.2em;
+  font-size: 0.82rem;
+}
+
+.primary,
+.statusForm button {
+  min-height: 2.6rem;
+  border: 1px solid #233d34;
+  border-radius: 4px;
+  background: #233d34;
+  color: #fff;
+  padding: 0.55rem 0.9rem;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.statusForm select {
+  min-height: 2.6rem;
+  max-width: 12rem;
+  border: 1px solid #bac5bd;
+  border-radius: 4px;
+  background: #fff;
+  color: #1d2924;
+  padding: 0.45rem 0.65rem;
+  font: inherit;
+}
+
+.primary:disabled,
+.statusForm button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.idle {
+  color: transparent;
+}
+
+.success {
+  color: #286647;
+}
+
+.error {
+  color: #a3392d;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

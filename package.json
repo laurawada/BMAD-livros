@@ -1,7 +1,7 @@
 {
   "name": "letterboxd-de-livros",
-  "version": "0.1.0",
   "private": true,
+  "version": "0.1.0",
   "engines": {
     "node": ">=20.9.0"
   },
@@ -10,20 +10,28 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint src scripts",
+    "test": "node --test --import tsx",
+    "test:shelf": "node --conditions=react-server --import tsx --test src/domain/shelf.test.ts src/server/shelf.test.ts src/server/shelf-snapshot.test.ts src/server/shelf-action-handlers.test.ts src/server/shelf-page-auth.test.ts src/infrastructure/supabase/shelf-repository.test.ts",
     "verify:supabase": "node --env-file=.env.local scripts/verify-supabase-env.mjs",
-    "test:supabase-env": "node --test scripts/verify-supabase-env.test.mjs"
+    "test:book-details": "node --test scripts/book-details.test.mjs",
+    "test:supabase-env": "node --test scripts/verify-supabase-env.test.mjs",
+    "test:book-search": "node --test scripts/book-search.test.mjs"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.100.1",
     "next": "16.3.6",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "eslint": "^9.17.0",
     "eslint-config-next": "16.3.6",
-    "typescript": "^5"
+    "tsx": "^4.23.15",
+    "typescript": "^5.7.3"
   }
 }
