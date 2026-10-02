@@ -58,3 +58,18 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-global-app-styling.md`
   summary: Anunciar dinamicamente o sucesso do cadastro com uma região acessível.
   evidence: A mensagem de sucesso não tem `role="status"` nem `aria-live`; a revisão identificou esta melhoria fora do escopo de estilo visual.
+- source_spec: `_bmad-output/implementation-artifacts/spec-3-1-adicionar-livros-e-organizar-a-estante.md`
+  summary: Reconciliar as migrations de catálogo/comunidade e estante para terem versões únicas e uma única definição compatível de `books`.
+  evidence: Ambas usam a versão `20261001000000` e criam `public.books`; uma instalação nova não consegue aplicar o conjunto atual.
+- source_spec: `_bmad-output/implementation-artifacts/spec-3-1-adicionar-livros-e-organizar-a-estante.md`
+  summary: Remover ou restringir a policy de inserção direta em `books` para impedir bypass da assinatura de snapshot.
+  evidence: A policy permissiva criada pela migration de comunidade continua autorizando INSERT quando `auth.uid()` não é nulo, mesmo com a policy restrita da estante.
+- source_spec: `_bmad-output/implementation-artifacts/spec-3-1-adicionar-livros-e-organizar-a-estante.md`
+  summary: Alinhar o redirect de `/estante` sem sessão com uma rota de autenticação existente ou provisionar o alias contratado.
+  evidence: A função direciona para `/login`, que não existe na aplicação; a página de entrada atual está em `/entrar`, e a intent aprovada registra `/login`.
+- source_spec: `_bmad-output/implementation-artifacts/spec-3-1-adicionar-livros-e-organizar-a-estante.md`
+  summary: Completar as instruções de setup para aplicar todas as migrations requeridas pela estante.
+  evidence: O README instrui aplicar somente a migration de comunidade e não menciona a migration de `shelves` e da RPC de adoção.
+- source_spec: `_bmad-output/implementation-artifacts/spec-3-1-adicionar-livros-e-organizar-a-estante.md`
+  summary: Verificar se falhas não relacionadas a cookies read-only são engolidas pelo adapter SSR e podem perder refresh de sessão.
+  evidence: `setAll` captura qualquer exceção; falta reproduzir um erro alcançável fora do contexto read-only e demonstrar o impacto na sessão.
