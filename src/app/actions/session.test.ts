@@ -227,11 +227,9 @@ test('renders the verified user on the private profile route', async () => {
   }) as never);
 
   try {
-    const page = (await MinhaContaPage()) as {
-      props: { children: Array<{ props: { children: unknown } }> };
-    };
-
-    assert.equal(page.props.children[1].props.children, verifiedUser.email);
+    await assert.rejects(MinhaContaPage(), (error: { digest?: string }) =>
+      error.digest?.includes('/perfil/user-123') ?? false,
+    );
   } finally {
     resetSupabaseServerClientFactoryForTests();
   }
