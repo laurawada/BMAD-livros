@@ -5,6 +5,8 @@ import { createShelfServerService } from "@/infrastructure/supabase/shelf-servic
 import { createShelfActionHandlers } from "@/server/shelf-action-handlers";
 import type { ShelfActionState } from "@/server/shelf-action-handlers";
 
+export type { ShelfActionState } from "@/server/shelf-action-handlers";
+
 const handlers = createShelfActionHandlers({
   createService: createShelfServerService,
   revalidate: revalidatePath,

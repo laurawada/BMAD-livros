@@ -13,6 +13,7 @@ export default function Home() {
         <nav className={styles.navigation} aria-label="Navegação principal">
           <Link className={styles.activeLink} href="/">Início</Link>
           <Link href="/buscar">Buscar livros</Link>
+          <Link href="/estante">Minha estante</Link>
           <Link href="/entrar">Entrar</Link>
           <Link href="/minha-conta">Minha conta</Link>
           <Link href="/cadastro">Criar conta</Link>
