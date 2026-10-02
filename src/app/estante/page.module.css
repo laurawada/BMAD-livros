@@ -1,0 +1,189 @@
+.page {
+  --ink: #202922;
+  --muted: #68736a;
+  --line: #d7ddd5;
+  --accent: #a44732;
+  min-height: 100vh;
+  padding: 0 clamp(1.25rem, 5vw, 5rem) 5rem;
+  color: var(--ink);
+  background: #f4f6f1;
+  font-family: var(--font-geist-sans), sans-serif;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 4.5rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.wordmark {
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.intro {
+  padding: clamp(2.5rem, 7vw, 5.5rem) 0 2.25rem;
+}
+
+.eyebrow {
+  margin-bottom: 0.85rem;
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+}
+
+.intro h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 3.5rem;
+  font-weight: 500;
+  line-height: 1.08;
+}
+
+.intro > p:last-child {
+  margin-top: 0.8rem;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 3rem;
+}
+
+.group {
+  min-width: 0;
+  padding: 1.2rem 0 1.7rem;
+  border-top: 1px solid var(--line);
+}
+
+.groupHeading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.groupHeading h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.groupHeading span {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.82rem;
+}
+
+.bookList {
+  display: grid;
+  gap: 1rem;
+  list-style: none;
+}
+
+.book {
+  display: grid;
+  grid-template-columns: 6.25rem minmax(0, 1fr);
+  gap: 1rem;
+  min-width: 0;
+}
+
+.cover,
+.coverPlaceholder {
+  width: 6.25rem;
+  height: 9.4rem;
+  border-radius: 2px;
+  object-fit: cover;
+  box-shadow: 0 5px 14px rgb(32 41 34 / 14%);
+}
+
+.coverPlaceholder {
+  display: grid;
+  place-items: center;
+  background: #d9ded7;
+  color: #506056;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem;
+}
+
+.bookInfo {
+  min-width: 0;
+  padding: 0.2rem 0;
+}
+
+.bookInfo h3 {
+  overflow-wrap: anywhere;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.1rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.bookInfo > p {
+  margin-top: 0.35rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.bookInfo > span {
+  display: inline-block;
+  margin-top: 0.55rem;
+  color: var(--accent);
+  font-size: 0.78rem;
+}
+
+.bookInfo :global(form) {
+  margin-top: 0.7rem;
+}
+
+.groupEmpty,
+.empty {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.empty {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.errorPage {
+  display: grid;
+  min-height: 60vh;
+  place-items: center;
+  padding: 2rem;
+  color: #a3392d;
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  .groups {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .intro h1 {
+    font-size: 2.3rem;
+  }
+
+  .book {
+    grid-template-columns: 5.25rem minmax(0, 1fr);
+  }
+
+  .cover,
+  .coverPlaceholder {
+    width: 5.25rem;
+    height: 7.9rem;
+  }
+}
